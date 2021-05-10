@@ -21,13 +21,31 @@ function checkCode(code:string):string{
 
 function main():string{
     const service = new mastermindService();
+    let keepPlaying = false;
 
-    rl.question('Inserisci il codice segreto: ', (answer:string) => {
+    //do {
+        rl.question('Inserisci il codice segreto: ', (code:string) => {
+            
+            console.log( service.checkCode(code, CODICE_SEGRETO) );
+            rl.close();
+            /*
+            rl.question('Vuoi continuare: [S/N] ? ', (answer:string) => {
+                
+                if(answer.toUpperCase() === "S")
+                    keepPlaying = true;
+                else
+                    keepPlaying = false;
+                console.log(keepPlaying);
+                
+                rl.close();
+            });*/
+        });
+
+        //console.log(keepPlaying);
         
-        console.log( service.checkCode(answer, CODICE_SEGRETO) );
-        
-        rl.close();
-    });
+
+    //} while (keepPlaying);
+
     return "fine";
 }
 
