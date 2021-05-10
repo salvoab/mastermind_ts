@@ -11,8 +11,39 @@ export class inputService {
         });
     }
 
-    chiudiRl(){
+    // REGOLA GENERALE: Prima tutti i metodi pubblici poi i privati e in fondo i metodi getter e setter
+
+    chiudiReadline(){
         this.rl.close();
+    }
+
+    async chiediDiContinuare():Promise<boolean> {
+        return new Promise((resolve, reject) => {  
+
+            this.rl.question("Vuoi continuare? [S/N]: ", (answer:string) => {               
+                if("S" === answer.toUpperCase())
+                    resolve(true);
+                else
+                    resolve(false);
+            })
+            
+        })
+    }
+
+    async recuperaCodiceValido():Promise<string>{
+        try {
+            let result = await this.recuperaCodice(false);
+
+            while (this.INVALID_CODE === result) {
+                console.log("Il codice che hai inserito non è lungo 4 caratteri");
+                result = await this.recuperaCodice(true);
+            } 
+            return result;
+        } 
+        catch (error){
+            console.log(error);
+            return this.INVALID_CODE;
+        }
     }
 
     private async recuperaCodice(repeated:boolean):Promise<string> {
@@ -37,22 +68,4 @@ export class inputService {
         })
     }
 
-    async recuperaCodiceValido():Promise<string>{
-        try {
-            let result = await this.recuperaCodice(false);
-
-            while (this.INVALID_CODE === result) {
-                console.log("Il codice che hai inserito non è lungo 4 caratteri");
-                result = await this.recuperaCodice(true);
-            } 
-            return result;
-        } 
-        catch (error){
-            console.log(error);
-            return this.INVALID_CODE;
-        }
-        finally {
-            this.chiudiRl();
-        }
-    }
 }
