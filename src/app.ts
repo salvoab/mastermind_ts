@@ -4,23 +4,29 @@ Creare un programma che legga da linea di comando, e controlli se il codice imme
 
 import {mastermindService} from "./common/mastermindService"
 
-const readline = require('readline');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+import readline  from 'readline'
+import { inputService } from "./common/inputService";
 
 const CODICE_SEGRETO = "1234"
 
-function checkCode(code:string):string{
-    if(CODICE_SEGRETO === code )
-        return "Complimenti hai indovinato il codice segreto";
-    return "Codice errato";
-}
+async function main(){
+    const gameService = new mastermindService();
+    const userInputService = new inputService();
 
-function main():string{
-    const service = new mastermindService();
+    let validCode:string;
+
+    
+    validCode = await userInputService.recuperaCodiceValido();
+
+    console.log( gameService.checkCode(validCode, CODICE_SEGRETO) );
+    console.log( gameService.checkWin(validCode, CODICE_SEGRETO) );
+
+    
+
+    return "fine";
+    
+
+    /*
     let keepPlaying = false;
 
     const insertCode = () => {
@@ -55,7 +61,9 @@ function main():string{
 
     play()
 
-    return "fine";
+    return "fine";*/
+
+
 }
 
-main()
+main().then(message => console.log(message)).catch(error => console.log(error))
