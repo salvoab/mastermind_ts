@@ -2,6 +2,8 @@
 Creare un programma che legga da linea di comando, e controlli se il codice immesso è uguale al codice segreto.
 */
 
+import {mastermindService} from "./common/mastermindService"
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -12,15 +14,17 @@ const rl = readline.createInterface({
 const CODICE_SEGRETO = "1234"
 
 function checkCode(code:string):string{
-    if(code == CODICE_SEGRETO)
+    if(CODICE_SEGRETO === code )
         return "Complimenti hai indovinato il codice segreto";
     return "Codice errato";
 }
 
 function main():string{
+    const service = new mastermindService();
+
     rl.question('Inserisci il codice segreto: ', (answer:string) => {
         
-        console.log( checkCode(answer) );
+        console.log( service.checkCode(answer, CODICE_SEGRETO) );
         
         rl.close();
     });
