@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "resolveJsonModule": true,
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "target": "es6",
+      "lib": [
+        "es7"
+      ],
+      "noImplicitAny": false,
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "outDir": "dist",
+      "experimentalDecorators": true
+    },
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": [
+    ]
+  }
