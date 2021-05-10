@@ -10,7 +10,7 @@ import { inputService } from "./common/inputService";
 const CODICE_SEGRETO = "1234"
 
 async function main(){
-    const gameService = new mastermindService();
+    const gameService = new mastermindService(CODICE_SEGRETO);
     const userInputService = new inputService();
 
     let validCode:string;
@@ -19,8 +19,13 @@ async function main(){
     do {
       validCode = await userInputService.recuperaCodiceValido();
   
-      console.log( gameService.checkCode(validCode, CODICE_SEGRETO) );
-      console.log( gameService.checkWin(validCode, CODICE_SEGRETO) );
+      //console.log( gameService.checkCode(validCode) );
+      const posizioniCorrette = gameService.checkPositions(validCode);
+      const numeroCaratteriCorretti = gameService.checkCharacters(validCode);
+      const risultato = `posizione(${posizioniCorrette}) giusto(${numeroCaratteriCorretti})`
+      console.log( risultato );
+      console.log( gameService.checkWin(validCode) );
+      // altro possibile modo di verifica vittoria: if(4 === numeroCaratteriCorretti && 4 === posizioniCorrette)
   
       keepPlaying = await userInputService.chiediDiContinuare();
   

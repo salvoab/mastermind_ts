@@ -1,46 +1,43 @@
 export class mastermindService {
 
-    checkCode(userCode:string, secretCode:string):string{
-        /*if(secretCode === userCode )
-            return "Complimenti hai indovinato il codice segreto";
-        return "Codice errato";*/
-        return this.checkPosition(userCode, secretCode) + " " + this.checkCharacters(userCode, secretCode);
+    secretCode:string;
+
+    constructor(secretCode:string){
+        this.secretCode = secretCode;
     }
 
-    checkPosition(userCode:string, secretCode:string):string {
+    checkCode(userCode:string):string{
+        const result = `posizione(${this.checkPositions(userCode)}) giusto(${this.checkCharacters(userCode)})`
+        return result;
+    }
+
+    checkPositions(userCode:string):number {
         let positionCounter = 0;
 
-        for (let i = 0; i < userCode.length; i++) {
-            const userCharacter = userCode[i];
-
-            for (let j = 0; j < secretCode.length; j++) {
-                const secretCharacter = secretCode[j];
-                if (userCharacter === secretCharacter && i === j)
-                    positionCounter++;
-            }
+        for (let i = 0; i < this.secretCode.length; i++) {
+            const character = this.secretCode[i];
+            if( character === userCode[i])
+                positionCounter++;
         }
 
-        return `posizione(${positionCounter})`;
+        return positionCounter;
     }
 
-    checkCharacters(userCode:string, secretCode:string):string {
+    checkCharacters(userCode:string):number {
         let characterCounter = 0;
 
         for (let i = 0; i < userCode.length; i++) {
             const userCharacter = userCode[i];
 
-            for (let j = 0; j < secretCode.length; j++) {
-                const secretCharacter = secretCode[j];
-                if (userCharacter === secretCharacter)
+            if (this.secretCode.includes(userCharacter))
                 characterCounter++;
-            }
         }
 
-        return `giusto(${characterCounter})`;
+        return characterCounter;
     }
 
-    checkWin(userCode:string, secretCode:string):string {
-        if(userCode === secretCode)
+    checkWin(userCode:string):string {
+        if(userCode === this.secretCode)
             return "WIN";
         return "";
     }
