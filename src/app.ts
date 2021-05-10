@@ -9,11 +9,9 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-
-
 const CODICE_SEGRETO = "1234"
 
-function checkCode(code:string){
+function checkCode(code:string):string{
     if(code == CODICE_SEGRETO)
         return "Complimenti hai indovinato il codice segreto";
     return "Codice errato";
