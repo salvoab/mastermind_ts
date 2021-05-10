@@ -23,28 +23,37 @@ function main():string{
     const service = new mastermindService();
     let keepPlaying = false;
 
-    //do {
-        rl.question('Inserisci il codice segreto: ', (code:string) => {
-            
+    const insertCode = () => {
+        return new Promise((resolve, reject) => {
+          rl.question('Inserisci il codice segreto: ', (code) => {
             console.log( service.checkCode(code, CODICE_SEGRETO) );
-            rl.close();
-            /*
-            rl.question('Vuoi continuare: [S/N] ? ', (answer:string) => {
-                
-                if(answer.toUpperCase() === "S")
+            console.log(service.checkWin(code, CODICE_SEGRETO));
+            resolve(true);
+          })
+        })
+    }
+
+    const replay = () => {
+        return new Promise((resolve, reject) => {
+          rl.question('Vuoi continuare? [S/N]: ', (answer) => {
+            if(answer.toUpperCase() === "S")
                     keepPlaying = true;
                 else
                     keepPlaying = false;
-                console.log(keepPlaying);
-                
-                rl.close();
-            });*/
-        });
+            resolve(true);
+          })
+        })
+    }
 
-        //console.log(keepPlaying);
-        
+    const play = async () => {
+        do{
+            await insertCode();
+            await replay();
+        } while (keepPlaying)
+        rl.close();
+    }
 
-    //} while (keepPlaying);
+    play()
 
     return "fine";
 }

@@ -38,4 +38,10 @@ export class mastermindService {
 
         return `giusto(${characterCounter})`;
     }
+
+    checkWin(userCode:string, secretCode:string):string {
+        if(userCode === secretCode)
+            return "WIN";
+        return "";
+    }
 }
