@@ -2,7 +2,8 @@
   "name": "master_mind",
   "version": "0.0.0",
   "scripts": {
-    "dev": "node --require ts-node/register src/app.ts"
+    "dev": "node --require ts-node/register src/app.ts",
+    "test": "_mocha --timeout 5000 -r ts-node/register ./*/*.spec.ts"
   },
   "private": true,
   "dependencies": {

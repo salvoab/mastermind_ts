@@ -6,53 +6,42 @@ export class mastermindService {
         this.secretCode = secretCode;
     }
 
-    checkCode(userCode:string):string{
-        const result = `posizione(${this.checkPositions(userCode)}) giusto(${this.checkCharacters(userCode)})`
-        return result;
-    }
+    checkCode(userCode:string):{position:number, matched:number} {        
+        const positionCounter = [];
+        const matchedPositions = [];
+        const rowSecretCode = this.secretCode.split('');
+        const rowUserCode = userCode.split('');
+        console.log("Codice segreto" + this.secretCode);
+        console.log("Codice utente" + userCode);
 
-    checkPositions(userCode:string):number {
-        let positionCounter = 0;
 
+        
         for (let i = 0; i < this.secretCode.length; i++) {
-            const character = this.secretCode[i];
-            if( character === userCode[i])
-                positionCounter++;
-        }
-
-        return positionCounter;
-    }
-
-    checkCharacters(userCode:string):number {
-        /*let characterCounter = 0;
-
-        for (let i = 0; i < userCode.length; i++) {
-            const userCharacter = userCode[i];
-
-            if (this.secretCode.includes(userCharacter))
-                characterCounter++;
-        }
-
-        return characterCounter;*/
-        let matchedPositions = [];
-        for (let i = 0; i < userCode.length; i++) {
-            const userCharacter = userCode[i];
-
-            for (let j = 0; j < this.secretCode.length; j++) {
-                const secretCharacter = this.secretCode[j];
-                if(secretCharacter === userCharacter && !matchedPositions.includes(j)){
-                    // se trovo una nuova corrispondenza, inserisco la posizione della corrispondenza in mathcedPositions ed esco dal ciclo
-                    matchedPositions.push(j);
-                    break;
-                }
+            if(rowSecretCode[i] === rowUserCode[i]){
+                rowSecretCode[i] = "T";
+                rowUserCode[i] = "T";
             }
         }
-        return matchedPositions.length;
+        const remainingSecret = rowSecretCode.filter((element) => element !== "T");
+        const remainingUserCode = rowUserCode.filter((element) => element !== "T");
+
+        for (let i = 0; i<remainingSecret.length; i++){
+            const index = remainingSecret.findIndex((element) => remainingUserCode[i] === element);
+            if(index !== -1){
+                remainingSecret[index] = "M";
+            }
+        }
+
+        const position = this.secretCode.length - remainingSecret.length;
+        const matched = position + remainingSecret.filter((element) => element === "M").length;
+        
+        return {position, matched};
     }
 
     checkWin(userCode:string):string {
-        if(userCode === this.secretCode)
+        const {position, matched} = this.checkCode(userCode);
+        if (5 === matched && 5 === position)
             return "WIN";
-        return "";
+        return `posizione(${position}) giusto(${matched})`;
     }
 }
