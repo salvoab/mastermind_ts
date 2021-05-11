@@ -3,6 +3,7 @@ import readline  from 'readline'
 export class inputService {
     private rl;
     private INVALID_CODE = "Non valido";
+    private SECRET_CODE_LENGTH = 5;
 
     constructor(){
         this.rl = readline.createInterface({
@@ -35,7 +36,7 @@ export class inputService {
             let result = await this.recuperaCodice(false);
 
             while (this.INVALID_CODE === result) {
-                console.log("Il codice che hai inserito non è lungo 4 caratteri");
+                console.log(`Il codice che hai inserito non è lungo ${this.SECRET_CODE_LENGTH} caratteri`);
                 result = await this.recuperaCodice(true);
             } 
             return result;
@@ -53,10 +54,10 @@ export class inputService {
             if(repeated)
                 domanda = "Reinserisci il codice segreto: ";
             else 
-                domanda = "Inserisci il codice segreto di 5 caratteri: ";
+                domanda = `Inserisci il codice segreto di ${this.SECRET_CODE_LENGTH} caratteri: `;
             
             this.rl.question(domanda, (code:string) => {               
-                if (code.length !== 5){
+                if (this.SECRET_CODE_LENGTH !== code.length){
                     resolve(this.INVALID_CODE);
                 }
                 else{
