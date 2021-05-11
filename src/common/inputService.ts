@@ -53,10 +53,10 @@ export class inputService {
             if(repeated)
                 domanda = "Reinserisci il codice segreto: ";
             else 
-                domanda = "Inserisci il codice segreto di 4 caratteri: ";
+                domanda = "Inserisci il codice segreto di 5 caratteri: ";
             
             this.rl.question(domanda, (code:string) => {               
-                if (code.length !== 4){
+                if (code.length !== 5){
                     resolve(this.INVALID_CODE);
                 }
                 else{

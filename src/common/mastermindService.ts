@@ -24,7 +24,7 @@ export class mastermindService {
     }
 
     checkCharacters(userCode:string):number {
-        let characterCounter = 0;
+        /*let characterCounter = 0;
 
         for (let i = 0; i < userCode.length; i++) {
             const userCharacter = userCode[i];
@@ -33,7 +33,21 @@ export class mastermindService {
                 characterCounter++;
         }
 
-        return characterCounter;
+        return characterCounter;*/
+        let matchedPositions = [];
+        for (let i = 0; i < userCode.length; i++) {
+            const userCharacter = userCode[i];
+
+            for (let j = 0; j < this.secretCode.length; j++) {
+                const secretCharacter = this.secretCode[j];
+                if(secretCharacter === userCharacter && !matchedPositions.includes(j)){
+                    // se trovo una nuova corrispondenza, inserisco la posizione della corrispondenza in mathcedPositions ed esco dal ciclo
+                    matchedPositions.push(j);
+                    break;
+                }
+            }
+        }
+        return matchedPositions.length;
     }
 
     checkWin(userCode:string):string {
