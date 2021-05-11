@@ -7,14 +7,8 @@ export class mastermindService {
     }
 
     checkCode(userCode:string):{position:number, matched:number} {        
-        const positionCounter = [];
-        const matchedPositions = [];
         const rowSecretCode = this.secretCode.split('');
         const rowUserCode = userCode.split('');
-        console.log("Codice segreto" + this.secretCode);
-        console.log("Codice utente" + userCode);
-
-
         
         for (let i = 0; i < this.secretCode.length; i++) {
             if(rowSecretCode[i] === rowUserCode[i]){
