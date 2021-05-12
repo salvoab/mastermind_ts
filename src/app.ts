@@ -2,12 +2,11 @@
 Creare un programma che legga da linea di comando, e controlli se il codice immesso è uguale al codice segreto.
 */
 
-import {mastermindService} from "./common/mastermindService"
+import {mastermindService} from "./common/mastermindService";
 
-import readline  from 'readline'
 import { inputService } from "./common/inputService";
 
-const CODICE_SEGRETO = "1234"
+const CODICE_SEGRETO = "12343"
 
 async function main(){
     const gameService = new mastermindService(CODICE_SEGRETO);

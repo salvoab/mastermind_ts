@@ -6,39 +6,36 @@ export class mastermindService {
         this.secretCode = secretCode;
     }
 
-    checkCode(userCode:string):string{
-        const result = `posizione(${this.checkPositions(userCode)}) giusto(${this.checkCharacters(userCode)})`
-        return result;
-    }
-
-    checkPositions(userCode:string):number {
-        let positionCounter = 0;
-
+    checkCode(userCode:string):{position:number, matched:number} {        
+        const rowSecretCode = this.secretCode.split('');
+        const rowUserCode = userCode.split('');
+        
         for (let i = 0; i < this.secretCode.length; i++) {
-            const character = this.secretCode[i];
-            if( character === userCode[i])
-                positionCounter++;
+            if(rowSecretCode[i] === rowUserCode[i]){
+                rowSecretCode[i] = "T";
+                rowUserCode[i] = "T";
+            }
+        }
+        const remainingSecret = rowSecretCode.filter((element) => element !== "T");
+        const remainingUserCode = rowUserCode.filter((element) => element !== "T");
+
+        for (let i = 0; i<remainingSecret.length; i++){
+            const index = remainingSecret.findIndex((element) => remainingUserCode[i] === element);
+            if(index !== -1){
+                remainingSecret[index] = "M";
+            }
         }
 
-        return positionCounter;
-    }
-
-    checkCharacters(userCode:string):number {
-        let characterCounter = 0;
-
-        for (let i = 0; i < userCode.length; i++) {
-            const userCharacter = userCode[i];
-
-            if (this.secretCode.includes(userCharacter))
-                characterCounter++;
-        }
-
-        return characterCounter;
+        const position = this.secretCode.length - remainingSecret.length;
+        const matched = position + remainingSecret.filter((element) => element === "M").length;
+        
+        return {position, matched};
     }
 
     checkWin(userCode:string):string {
-        if(userCode === this.secretCode)
+        const {position, matched} = this.checkCode(userCode);
+        if (5 === matched && 5 === position)
             return "WIN";
-        return "";
+        return `posizione(${position}) giusto(${matched})`;
     }
 }
