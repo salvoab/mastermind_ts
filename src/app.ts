@@ -2,13 +2,20 @@
 Creare un programma che legga da linea di comando, e controlli se il codice immesso è uguale al codice segreto.
 */
 
-import {mastermindService} from "./common/mastermindService";
+//import di librerie
+import {interpret} from 'xstate';
 
+
+//si lascia uno spazio e si importano le classi necessarie
+import {MastermindMachine} from "./lib/machine";
+import {mastermindService} from "./common/mastermindService";
 import { inputService } from "./common/inputService";
+
+//si lascia uno spazio e si dichiarano le costanti
 
 const CODICE_SEGRETO = "12343"
 
-async function main(){
+/*async function main(){
     const gameService = new mastermindService(CODICE_SEGRETO);
     const userInputService = new inputService();
 
@@ -34,6 +41,17 @@ async function main(){
     
     return "fine";
 
+}
+*/
+async function main() {
+  const myMachine = new MastermindMachine();
+  myMachine.interpret.start();
+  myMachine.interpret.send({type: 'OK'});
+  myMachine.interpret.send({type: 'OK'});
+  
+
+
+  return "fine";
 }
 
 main().then(message => console.log(message)).catch(error => console.log(error))
