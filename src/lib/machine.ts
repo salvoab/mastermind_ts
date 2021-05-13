@@ -19,7 +19,8 @@ export class MastermindMachine{
             context: {
                 // TO-DO generare il codice in maniera randomica
                 secretCode: 'EEEEE', 
-                userCode: 'eeeee'
+                userCode: 'eeeee',
+                keepPlay: false
             },
             states: {
                 starter: {
@@ -48,16 +49,33 @@ export class MastermindMachine{
                 calculator: {
                     entry: ['calcola'],
                     on:{
-                        WIN: {target: 'end'},
-                        LOSE: {target: 'end'},
+                        WIN: {target: 'matchResult'},
+                        LOSE: {target: 'matchResult'},
                         ERROR: {target: 'error'}
                     }
                 },
-                end: {
+                matchResult: {
                     entry: ['risultatoPartita'],
                     on:{
-                        CONTINUE: {target: "validCode"}
+                        OK: {target: "keepPlaying"}
                     }
+                },
+                keepPlaying: {
+                    invoke: {
+                        id: 'askToPlayAgain',
+                        src: (context, event) => this._inputService.chiediDiContinuare(),
+                        onDone: {
+                            actions: 'checkAnswer'
+                        }
+                    },
+                    on: {
+                        CONTINUE: {target: 'validCode'},
+                        STOP: {target: 'end'}
+                    }
+                },
+                end: {
+                    entry: 'stopGame',
+                    type: 'final'
                 },
                 error: {
                     type: "final"
@@ -74,14 +92,6 @@ export class MastermindMachine{
                     return ( {type: 'OK'} );
                 }),
 
-                /*recuperaCodice: (context, event) => {
-                    this._inputService.recuperaCodiceValido().then(result => {
-                        context['userCode'] = result;
-                        //console.log('Codice utente recuperato: ' + context.userCode);
-                        this.interpret.send('OK')
-                    });
-                },*/
-
                 calcola: send((context, event) => {
                     const result = this._mastermindService.checkWin(context['userCode']);
                     console.log(result);
@@ -91,20 +101,23 @@ export class MastermindMachine{
                     return { type: 'LOSE' };
                 }),
 
-                risultatoPartita: (context, event) => {
+                risultatoPartita: send((context, event) => {
                     if(event.type === "WIN")
                         console.log('HAI VINTO');
                     else
                         console.log('Mi dispiace, hai perso');
                     
-                    this._inputService.chiediDiContinuare().then(keepPlaying => {
-                        if(keepPlaying)
-                            this._interpret.send('CONTINUE');
-                        else{
-                            this._inputService.chiudiReadline();
-                            this._interpret.stop();
-                        }
-                    })
+                    return {type: 'OK'};
+                }),
+
+                checkAnswer: send((context, event) => {                 
+                    if(event['data'])
+                        return {type: 'CONTINUE'}
+                    return {type: 'STOP'}
+                }),
+
+                stopGame: (context, event) => {
+                    this._inputService.chiudiReadline();
                 }
             }
         });
