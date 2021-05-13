@@ -19,8 +19,7 @@ export class MastermindMachine{
             context: {
                 // TO-DO generare il codice in maniera randomica
                 secretCode: 'EEEEE', 
-                userCode: 'eeeee',
-                keepPlay: false
+                userCode: 'eeeee'
             },
             states: {
                 starter: {
