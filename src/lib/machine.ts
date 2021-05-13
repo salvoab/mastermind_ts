@@ -1,7 +1,8 @@
-import {createMachine, EventObject, interpret, send, StateMachine } from 'xstate';
+import {createMachine, EventObject, interpret, send, StateMachine, assign } from 'xstate';
 import { MastermindContext, MastermindEvent, MastermindSchema } from './types';
 import { InputService } from '../common/inputService';
 import {MastermindService} from '../common/mastermindService';
+import { raise } from 'xstate/lib/actions';
 
 
 export class MastermindMachine{
@@ -22,16 +23,24 @@ export class MastermindMachine{
             },
             states: {
                 starter: {
-                    entry: ['getSecretCode'],
+                    entry: 'getSecretCode',
                     on:{
                         OK: {target: 'validCode'},
                         ERROR: {target: 'error'},
                     }
                 },
                 validCode: {
-                    entry: ['recuperaCodice'],
+                    //entry: ['recuperaCodice'],
+                    invoke: {
+                        id: 'getUserCode',
+                        src: (context, event) => this._inputService.recuperaCodiceValido(),
+                        onDone: {
+                            target: 'calculator',
+                            actions: assign({ userCode: (context, event) => event.data })
+                        }
+                    },
                     on:{
-                        OK: {target: 'calculator'},
+                        //OK: {target: 'calculator'},
                         KO: {target: 'starter'},
                         ERROR: {target: 'error'}
                     }
@@ -58,36 +67,36 @@ export class MastermindMachine{
         },
         {
             actions: {
-                getSecretCode: (context, event) =>{
-                    context.secretCode = this._mastermindService.secretCode;
-                    console.log('Il codice Segreto recuperato è: ' + context.secretCode);
-                    this._interpret.send('OK');
-                },
+                getSecretCode: send((context, event) =>{
+                    context['secretCode'] = this._mastermindService.secretCode;
+                    console.log('Il codice Segreto recuperato è: ' + context['secretCode']);
+                    //this._interpret.send('OK');
+                    return ( {type: 'OK'} );
+                }),
 
-                recuperaCodice: (context, event) => {
+                /*recuperaCodice: (context, event) => {
                     this._inputService.recuperaCodiceValido().then(result => {
-                        context.userCode = result
+                        context['userCode'] = result;
                         //console.log('Codice utente recuperato: ' + context.userCode);
-                        this._interpret.send('OK');
+                        this.interpret.send('OK')
                     });
-                },
+                },*/
 
-                calcola: (context, event) => {
-                    const result = this._mastermindService.checkWin(context.userCode);
+                calcola: send((context, event) => {
+                    const result = this._mastermindService.checkWin(context['userCode']);
                     console.log(result);
                     if( result === "WIN")
-                        this._interpret.send('WIN');
-                    else
-                        this._interpret.send('LOSE');
+                        return { type: 'WIN' };
                     
-                },
+                    return { type: 'LOSE' };
+                }),
 
                 risultatoPartita: (context, event) => {
                     if(event.type === "WIN")
                         console.log('HAI VINTO');
                     else
                         console.log('Mi dispiace, hai perso');
-
+                    
                     this._inputService.chiediDiContinuare().then(keepPlaying => {
                         if(keepPlaying)
                             this._interpret.send('CONTINUE');
