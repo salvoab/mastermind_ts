@@ -14,14 +14,14 @@ export class MastermindMachine{
 
         this._machine = createMachine({
             id: "mastermind",
-            initial: "insert",
+            initial: "starter",
             context: {
                 // TO-DO generare il codice in maniera randomica
                 secretCode: 'EEEEE', 
                 userCode: 'eeeee'
             },
             states: {
-                insert: {
+                starter: {
                     entry: ['getSecretCode'],
                     on:{
                         OK: {target: 'validCode'},
@@ -32,7 +32,7 @@ export class MastermindMachine{
                     entry: ['recuperaCodice'],
                     on:{
                         OK: {target: 'calculator'},
-                        KO: {target: 'insert'},
+                        KO: {target: 'starter'},
                         ERROR: {target: 'error'}
                     }
                 },
@@ -46,7 +46,9 @@ export class MastermindMachine{
                 },
                 end: {
                     entry: ['risultatoPartita'],
-                    type: "final"
+                    on:{
+                        CONTINUE: {target: "validCode"}
+                    }
                 },
                 error: {
                     type: "final"
@@ -61,6 +63,7 @@ export class MastermindMachine{
                     console.log('Il codice Segreto recuperato è: ' + context.secretCode);
                     this._interpret.send('OK');
                 },
+
                 recuperaCodice: (context, event) => {
                     this._inputService.recuperaCodiceValido().then(result => {
                         context.userCode = result
@@ -84,14 +87,20 @@ export class MastermindMachine{
                         console.log('HAI VINTO');
                     else
                         console.log('Mi dispiace, hai perso');
-                        
-                    this._inputService.chiudiReadline();
-                    this._interpret.stop();
+
+                    this._inputService.chiediDiContinuare().then(keepPlaying => {
+                        if(keepPlaying)
+                            this._interpret.send('CONTINUE');
+                        else{
+                            this._inputService.chiudiReadline();
+                            this._interpret.stop();
+                        }
+                    })
                 }
             }
         });
 
-        this._interpret = interpret(this._machine).onTransition((state)=> console.log(state.value));
+        this._interpret = interpret(this._machine);//.onTransition((state)=> console.log(state.value));
     }
 
     get machine(){
