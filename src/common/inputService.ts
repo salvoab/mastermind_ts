@@ -1,6 +1,6 @@
 import readline  from 'readline'
 
-export class inputService {
+export class InputService {
     private rl;
     private INVALID_CODE = "Non valido";
     private SECRET_CODE_LENGTH = 5;

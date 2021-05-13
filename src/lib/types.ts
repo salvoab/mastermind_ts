@@ -3,9 +3,11 @@ export interface MastermindContext{
     try: number
 }
 
-export type MastermindEvent = {
-    type: 'OK' | 'KO' | 'WIN' | 'LOSE';
-}
+export type MastermindEvent = 
+    | { type: 'OK' }
+    | { type: 'KO' }
+    | { type: 'WIN' }
+    | { type: 'LOSE' };
 
 export type MastermindState = {
     value: string;
