@@ -2,9 +2,9 @@ export class User {
     private _nickname: string;
     private _points: number;
 
-    constructor(nickname:string = ''){
+    constructor(nickname:string = '', points:number = 0){
         this._nickname = nickname;
-        this._points = 0;
+        this._points = points;
     }
 
     // di base aumenta di 1, se il sistema di punteggio cambia i punti possono essere > 1
@@ -12,19 +12,19 @@ export class User {
         this._points += points;
     }
 
-    public set points(points:number){
+    set points(points:number){
         this._points = points;
     }
 
-    public get points(){
+    get points(){
         return this._points;
     }
 
-    public set nickname(name:string){
+    set nickname(name:string){
         this._nickname = name;
     }
 
-    public get nickname(){
+    get nickname(){
         return this._nickname;
     }
 

@@ -2,6 +2,7 @@ import {createMachine, interpret, send, assign } from 'xstate';
 import { InputService } from '../common/inputService';
 import {MastermindService} from '../common/mastermindService';
 import {User} from '../common/user';
+import {UsersService} from '../common/userService';
 
 const fs = require('fs');
 
@@ -11,9 +12,10 @@ export class MastermindMachine{
     private _machine:any;
     private _interpret:any;
 
-    constructor(private _inputService:InputService, private _mastermindService:MastermindService){
+    constructor(private _inputService:InputService, private _mastermindService:MastermindService, private _usersService:UsersService){
         this._inputService = _inputService;
         this._mastermindService = _mastermindService;
+        this._usersService = _usersService;
 
         this._machine = createMachine({
             id: "mastermind",
@@ -22,13 +24,14 @@ export class MastermindMachine{
                 // TO-DO generare il codice in maniera randomica
                 secretCode: 'EEEEE', 
                 userCode: 'eeeee',
-                player: new User()
+                players: [],
+                actualPlayer: new User()
             },
             states: {
                 loader: {
                     entry: 'loadContext',
                     on:{
-                        LOADED: {target: 'validCode'},
+                        LOADED: {target: 'starter'},
                         NO_PLAYER: {target: 'starter'}
                     }
                 },
@@ -38,7 +41,7 @@ export class MastermindMachine{
                         id: 'getNickname',
                         src: (context, event) => this._inputService.recuperaNickname(),
                         onDone: {
-                            actions: ['setNickname', 'getSecretCode']
+                            actions: ['playersSetup', 'getSecretCode']
                         }
                     },
                     on:{
@@ -102,27 +105,21 @@ export class MastermindMachine{
         {
             actions: {
                 loadContext: send((context, event)=>{
-                    if( fs.existsSync('./src/data/machineContext.json') ){
-                        const oldContext = JSON.parse( fs.readFileSync('./src/data/machineContext.json') );
-                        console.log(oldContext.secretCode, oldContext.player._nickname);
-                        context['secretCode'] = oldContext.secretCode;
-                        context['player'].nickname = oldContext.player._nickname;
-                        context['player'].points = oldContext.player._points;
-                        return {type: 'LOADED'}
+                    const oldMachineContextPath = './src/data/machineContext.json';
+                    if( this._usersService.loadMachine(context, oldMachineContextPath) ){
+                        return {type: 'LOADED'};
                     }
 
-                    return {type: 'NO_PLAYER'}
+                    return {type: 'NO_PLAYER'};
                 }),
 
-                setNickname: (context, event) => {
-                    context['player'].nickname = event['data'];
-                    //console.log(context);
+                playersSetup: (context, event) => {
+                    context['actualPlayer'] = this._usersService.getUser(context, event['data']);
                 },
 
                 getSecretCode: send((context, event) =>{
                     context['secretCode'] = this._mastermindService.secretCode;
                     console.log('Il codice Segreto recuperato è: ' + context['secretCode']);
-                    //this._interpret.send('OK');
                     return ( {type: 'OK'} );
                 }),
 
@@ -138,12 +135,14 @@ export class MastermindMachine{
 
                 risultatoPartita: send((context, event) => {
                     if(event.type === "WIN"){
-                        console.log(context['player'].nickname + ' HAI VINTO');
-                        context['player'].addPoints();
-                        console.log('Il tuo punteggio è: ' + context['player'].points + ' punti');
+                        console.log(context['actualPlayer'].nickname + ' HAI VINTO');
+                        context['actualPlayer'].addPoints();
+                        this._usersService.updateUser(context);
+                        console.log('Il tuo punteggio è: ' + context['actualPlayer'].points + ' punti');
                     }
-                    else
-                        console.log('Mi dispiace, hai perso');
+                    else{
+                        console.log('Mi dispiace '+ context['actualPlayer'].nickname +': Hai perso');
+                    }
                     
                     return {type: 'OK'};
                 }),
@@ -155,8 +154,9 @@ export class MastermindMachine{
                 }),
 
                 stopGame: (context, event) => {
-                    fs.promises.mkdir('./src/data', { recursive: true }).catch(console.error);
-                    fs.writeFileSync('./src/data/machineContext.json', JSON.stringify(context));
+                    // fs.promises.mkdir('./src/data', { recursive: true }).catch(console.error);
+                    // fs.writeFileSync('./src/data/machineContext.json', JSON.stringify(context));
+                    this._usersService.saveMachine(context, './src/data/machineContext.json');
                     this._inputService.chiudiReadline();
                 }
             }

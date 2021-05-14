@@ -9,7 +9,8 @@ import {createMachine, interpret, actions} from 'xstate';
 //si lascia uno spazio e si importano le classi necessarie
 import {MastermindMachine} from "./lib/machine";
 import {MastermindService} from "./common/mastermindService";
-import { InputService } from "./common/inputService";
+import {InputService} from "./common/inputService";
+import {UsersService} from "./common/userService";
 
 //si lascia uno spazio e si dichiarano le costanti
 
@@ -44,7 +45,7 @@ const CODICE_SEGRETO = "12343"
 }
 */
 async function main() {
-  const myMachine = new MastermindMachine(new InputService(), new MastermindService('12343'));
+  const myMachine = new MastermindMachine(new InputService(), new MastermindService('12343'), new UsersService());
   myMachine.interpret.start();
   /*myMachine.interpret.send({type: 'OK'});
   myMachine.interpret.send({type: 'OK'});

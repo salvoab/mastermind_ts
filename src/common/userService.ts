@@ -1,58 +1,51 @@
 import {User} from './user';
 
-export class UserService{
+const fs = require('fs');
+const path = require('path');
 
-    constructor(private _users:Array<User>){
-        this._users = _users;
-    }
+export class UsersService{
 
-    /**
-     * Search the nickname of a user player and give the user player instance if it was found
-     * 
-     * @param nickname The nickname of the player to find
-     * @returns The player instance if the user was found, undefined otherwise
-     */
-    public getUser(nickname:string):User{
-        return this._users.find((player, index) => player.nickname === nickname);
-    }
+    constructor(){ }
 
-    /**
-     * Create and insert the player with a given nickname in the array of players.
-     * If the nickname already exists then it make no changes in the players array.
-     * 
-     * @param nickname the player's nickname
-     * @returns the array of players
-     */
-    public updateUser(nickname:string):Array<User>{
-        const player = this.getUser(nickname);
-        if (player){
-            return this._users;
+    public getUser(machineContext, nickname:string):User{
+        const retrivedPlayer = machineContext['players'].find(player => player.nickname === nickname);
+        if( retrivedPlayer ){
+            console.log('recuperato', retrivedPlayer);
+            
+            return retrivedPlayer;
         }
-
-        this._users.push( new User(nickname) );
-        return this._users;
-    }
-
-    /**
-     * Delete a player from the array of player, if the player's nickname exists.
-     * 
-     * @param nickname (string) the nickname of the player to delete
-     */
-    public deleteUser(nickname:string):void{
-        const player = this.getUser(nickname);
-        if(player){
-            const deleteIndex = this._users.indexOf(player);
-            if( deleteIndex > -1 ){
-                this._users.splice(deleteIndex, 1);
-            }
+        else {
+            const newPlayer = new User(nickname);
+            machineContext['players'].push(newPlayer);
+            //console.log('nuovo utente inserito in', machineContext['players']);
+            return newPlayer;
         }
     }
 
-    public get users(){
-        return this._users;
+    public updateUser(machineContext){
+        const actualPlayerPosition = machineContext['players'].findIndex(player => player === machineContext['actualPlayer']);
+        machineContext['players'][actualPlayerPosition].points = machineContext['actualPlayer'].points;
+        //console.log('sono in fase di update', machineContext['players']);
     }
 
-    public set users(users:Array<User>){
-        this._users = users;
+    public loadMachine(machineContext, machineContextPath:string):boolean{
+        if( fs.existsSync(machineContextPath) ){
+            const oldContext = JSON.parse( fs.readFileSync(machineContextPath) );
+            //console.log(oldContext.players);
+            oldContext.players.forEach(player => {
+                machineContext['players'].push(new User(player._nickname, player._points));
+            });
+            //console.log('loaded: ', machineContext['players']);
+            return true;
+        }
+
+        return false;
     }
+
+    public saveMachine(machineContext, machineContextPath:string){
+        const directoryPath = path.dirname(machineContextPath);
+        fs.promises.mkdir(directoryPath, { recursive: true }).catch(console.error);
+        fs.writeFileSync(machineContextPath, JSON.stringify(machineContext));
+    }
+
 }
