@@ -18,14 +18,17 @@ export class InputService {
         this.rl.close();
     }
 
+    async recuperaNickname():Promise<string>{
+        return new Promise((resolve, reject) => {
+            this.rl.question("Inserisci il nickname del giocatore: " , (answer:string) => resolve(answer) );
+        })
+    }
+
     async chiediDiContinuare():Promise<boolean> {
         return new Promise((resolve, reject) => {  
 
             this.rl.question("Vuoi continuare? [S/N]: ", (answer:string) => {               
-                if("S" === answer.toUpperCase())
-                    resolve(true);
-                else
-                    resolve(false);
+                resolve ("S" === answer.toUpperCase());
             })
             
         })

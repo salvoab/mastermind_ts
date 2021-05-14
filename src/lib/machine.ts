@@ -1,8 +1,10 @@
-import {createMachine, EventObject, interpret, send, StateMachine, assign } from 'xstate';
-import { MastermindContext, MastermindEvent, MastermindSchema } from './types';
+import {createMachine, interpret, send, assign } from 'xstate';
 import { InputService } from '../common/inputService';
 import {MastermindService} from '../common/mastermindService';
-import { raise } from 'xstate/lib/actions';
+import {User} from '../common/user';
+
+const fs = require('fs');
+
 
 
 export class MastermindMachine{
@@ -15,15 +17,30 @@ export class MastermindMachine{
 
         this._machine = createMachine({
             id: "mastermind",
-            initial: "starter",
+            initial: "loader",
             context: {
                 // TO-DO generare il codice in maniera randomica
                 secretCode: 'EEEEE', 
-                userCode: 'eeeee'
+                userCode: 'eeeee',
+                player: new User()
             },
             states: {
+                loader: {
+                    entry: 'loadContext',
+                    on:{
+                        LOADED: {target: 'validCode'},
+                        NO_PLAYER: {target: 'starter'}
+                    }
+                },
                 starter: {
-                    entry: 'getSecretCode',
+                    //entry: 'getSecretCode',
+                    invoke:{
+                        id: 'getNickname',
+                        src: (context, event) => this._inputService.recuperaNickname(),
+                        onDone: {
+                            actions: ['setNickname', 'getSecretCode']
+                        }
+                    },
                     on:{
                         OK: {target: 'validCode'},
                         ERROR: {target: 'error'},
@@ -84,6 +101,24 @@ export class MastermindMachine{
         },
         {
             actions: {
+                loadContext: send((context, event)=>{
+                    if( fs.existsSync('./src/data/machineContext.json') ){
+                        const oldContext = JSON.parse( fs.readFileSync('./src/data/machineContext.json') );
+                        console.log(oldContext.secretCode, oldContext.player._nickname);
+                        context['secretCode'] = oldContext.secretCode;
+                        context['player'].nickname = oldContext.player._nickname;
+                        context['player'].points = oldContext.player._points;
+                        return {type: 'LOADED'}
+                    }
+
+                    return {type: 'NO_PLAYER'}
+                }),
+
+                setNickname: (context, event) => {
+                    context['player'].nickname = event['data'];
+                    //console.log(context);
+                },
+
                 getSecretCode: send((context, event) =>{
                     context['secretCode'] = this._mastermindService.secretCode;
                     console.log('Il codice Segreto recuperato è: ' + context['secretCode']);
@@ -94,15 +129,19 @@ export class MastermindMachine{
                 calcola: send((context, event) => {
                     const result = this._mastermindService.checkWin(context['userCode']);
                     console.log(result);
-                    if( result === "WIN")
+                    if( result === "WIN"){
                         return { type: 'WIN' };
+                    }
                     
                     return { type: 'LOSE' };
                 }),
 
                 risultatoPartita: send((context, event) => {
-                    if(event.type === "WIN")
-                        console.log('HAI VINTO');
+                    if(event.type === "WIN"){
+                        console.log(context['player'].nickname + ' HAI VINTO');
+                        context['player'].addPoints();
+                        console.log('Il tuo punteggio è: ' + context['player'].points + ' punti');
+                    }
                     else
                         console.log('Mi dispiace, hai perso');
                     
@@ -116,6 +155,8 @@ export class MastermindMachine{
                 }),
 
                 stopGame: (context, event) => {
+                    fs.promises.mkdir('./src/data', { recursive: true }).catch(console.error);
+                    fs.writeFileSync('./src/data/machineContext.json', JSON.stringify(context));
                     this._inputService.chiudiReadline();
                 }
             }
