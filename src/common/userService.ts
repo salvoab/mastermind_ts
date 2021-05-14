@@ -28,6 +28,13 @@ export class UsersService{
         //console.log('sono in fase di update', machineContext['players']);
     }
 
+    public deleteUser(machineContext, nickname:string){
+        const playerPosition = machineContext['players'].findIndex(player => player.nickname === nickname);
+        if (playerPosition > -1){
+            machineContext['players'].splice(playerPosition, 1);
+        }
+    }
+
     public loadMachine(machineContext, machineContextPath:string):boolean{
         if( fs.existsSync(machineContextPath) ){
             const oldContext = JSON.parse( fs.readFileSync(machineContextPath) );
