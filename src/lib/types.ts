@@ -18,6 +18,7 @@ export type MastermindState = {
     }
 }
 
+/*
 export type MastermindSchema = {
     type: 'insert' | 'validCode' | 'calculator' | 'end';
     states: {
@@ -26,4 +27,4 @@ export type MastermindSchema = {
         calculator: {};
         end: {};
     }
-}
+}*/

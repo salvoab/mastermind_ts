@@ -2,21 +2,20 @@
 Creare un programma che legga da linea di comando, e controlli se il codice immesso è uguale al codice segreto.
 */
 
-//import di librerie
-import {createMachine, interpret, actions} from 'xstate';
+// import di librerie
+//import { createMachine, interpret, actions } from 'xstate';
 
+// si lascia uno spazio e si importano le classi necessarie
+import MastermindMachine from './lib/machine';
+import MastermindService from './common/mastermindService';
+import InputService from './common/inputService';
+import { UsersService } from './common/userService';
 
-//si lascia uno spazio e si importano le classi necessarie
-import {MastermindMachine} from "./lib/machine";
-import {MastermindService} from "./common/mastermindService";
-import {InputService} from "./common/inputService";
-import {UsersService} from "./common/userService";
+// si lascia uno spazio e si dichiarano le costanti
 
-//si lascia uno spazio e si dichiarano le costanti
+const CODICE_SEGRETO = '12343';
 
-const CODICE_SEGRETO = "12343"
-
-/*async function main(){
+/* async function main(){
     const gameService = new mastermindService(CODICE_SEGRETO);
     const userInputService = new inputService();
 
@@ -25,7 +24,7 @@ const CODICE_SEGRETO = "12343"
 
     do {
       validCode = await userInputService.recuperaCodiceValido();
-  
+
       //console.log( gameService.checkCode(validCode) );
       const posizioniCorrette = gameService.checkPositions(validCode);
       const numeroCaratteriCorretti = gameService.checkCharacters(validCode);
@@ -33,27 +32,27 @@ const CODICE_SEGRETO = "12343"
       console.log( risultato );
       console.log( gameService.checkWin(validCode) );
       // altro possibile modo di verifica vittoria: if(4 === numeroCaratteriCorretti && 4 === posizioniCorrette)
-  
+
       keepPlaying = await userInputService.chiediDiContinuare();
-  
+
     } while(keepPlaying);
 
     userInputService.chiudiReadline();
-    
+
     return "fine";
 
 }
 */
 async function main() {
-  const myMachine = new MastermindMachine(new InputService(), new MastermindService('12343'), new UsersService());
+  const myMachine = new MastermindMachine(new InputService(), new MastermindService(CODICE_SEGRETO), new UsersService());
   myMachine.interpret.start();
-  /*myMachine.interpret.send({type: 'OK'});
+  /* myMachine.interpret.send({type: 'OK'});
   myMachine.interpret.send({type: 'OK'});
   const currentState = myMachine.interpret.send({type: 'OK'});
 
-  console.log(currentState.nextEvents);*/
+  console.log(currentState.nextEvents); */
 
-  return "fine";
+  return 'fine';
 }
 
 /*
@@ -105,5 +104,5 @@ endState.actions
 }
 */
 
-main().then(message => console.log(message)).catch(error => console.log(error))
-//main2();
+main().then((message) => console.log(message)).catch((error) => console.log(error));
+// main2();

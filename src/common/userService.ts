@@ -6,7 +6,6 @@ const fs = require('fs');
 const path = require('path');
 
 export class UsersService {
-
   public getUser(machineContext, nickname:string):User {
     const retrivedPlayer = machineContext.players.find((player) => player.nickname === nickname);
     if (retrivedPlayer) {

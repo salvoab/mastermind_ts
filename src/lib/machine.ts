@@ -2,8 +2,8 @@ import {
   createMachine, interpret, send,
 } from 'xstate';
 import InputService from '../common/inputService';
-import { MastermindService } from '../common/mastermindService';
-import { User } from '../common/user';
+import MastermindService from '../common/mastermindService';
+import User from '../common/user';
 import { UsersService } from '../common/userService';
 
 export default class MastermindMachine {
@@ -122,7 +122,7 @@ export default class MastermindMachine {
           }),
 
           playersSetup: (context, event) => {
-            context.actualPlayer = this._usersService.getUser(context, event.data);
+            context.actualPlayer = this._usersService.getUser(context, event['data']);
           },
 
           getSecretCode: send((context, event) => {
@@ -133,7 +133,7 @@ export default class MastermindMachine {
           }),
 
           updateTries: (context, event) => {
-            context.actualPlayer.currentTry = event.data;
+            context.actualPlayer.currentTry = event['data'];
             this._usersService.updateUser(context);
           },
 
@@ -166,7 +166,7 @@ export default class MastermindMachine {
           }),
 
           checkAnswer: send((context, event) => {
-            if (event.data) { return { type: 'CONTINUE' }; }
+            if (event['data']) { return { type: 'CONTINUE' }; }
             return { type: 'STOP' };
           }),
 
