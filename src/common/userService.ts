@@ -10,8 +10,7 @@ export class UsersService{
     public getUser(machineContext, nickname:string):User{
         const retrivedPlayer = machineContext['players'].find(player => player.nickname === nickname);
         if( retrivedPlayer ){
-            console.log('recuperato', retrivedPlayer);
-            
+            //console.log('recuperato', retrivedPlayer);
             return retrivedPlayer;
         }
         else {
