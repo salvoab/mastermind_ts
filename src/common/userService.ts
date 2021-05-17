@@ -24,15 +24,18 @@ export class UsersService{
 
     public updateUser(machineContext){
         const actualPlayerPosition = machineContext['players'].findIndex(player => player === machineContext['actualPlayer']);
-        machineContext['players'][actualPlayerPosition].points = machineContext['actualPlayer'].points;
-        //console.log('sono in fase di update', machineContext['players']);
+        machineContext['players'][actualPlayerPosition] = machineContext['actualPlayer'];
     }
 
-    public deleteUser(machineContext, nickname:string){
+    public deleteUser(machineContext, nickname:string):User{
         const playerPosition = machineContext['players'].findIndex(player => player.nickname === nickname);
         if (playerPosition > -1){
+            const deletedPlayer = machineContext['players'][playerPosition];
             machineContext['players'].splice(playerPosition, 1);
+            return deletedPlayer;
         }
+
+        return null;
     }
 
     public loadMachine(machineContext, machineContextPath:string):boolean{

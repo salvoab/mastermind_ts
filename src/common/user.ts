@@ -1,10 +1,15 @@
 export class User {
     private _nickname: string;
     private _points: number;
+    //TO-DO gestire questi nuovi campi
+    private _tries: Array<string>;
+    private _currentTry:string;
 
     constructor(nickname:string = '', points:number = 0){
         this._nickname = nickname;
         this._points = points;
+        this._tries = [];
+        this._currentTry = 'eeeee';
     }
 
     // di base aumenta di 1, se il sistema di punteggio cambia i punti possono essere > 1
@@ -26,6 +31,25 @@ export class User {
 
     get nickname(){
         return this._nickname;
+    }
+
+    set currentTry(userTry:string){
+        this._currentTry = userTry;
+        this._tries.push(userTry);
+    }
+
+    get currentTry(){
+        return this._currentTry;
+    }
+
+    set tries(userTries:Array<string>){
+        if(userTries){
+            this._tries = userTries;
+        }
+    }
+
+    get tries(){
+        return this._tries;
     }
 
 }

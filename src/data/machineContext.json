@@ -1,1 +1,1 @@
-{"secretCode":"12343","userCode":"12564","players":[{"_nickname":"lillo","_points":2},{"_nickname":"gino","_points":4},{"_nickname":"filippo","_points":5},{"_nickname":"ezio","_points":2}],"actualPlayer":{"_nickname":"gino","_points":4}}
+{"secretCode":"12343","players":[{"_nickname":"giocatore1","_points":1,"_tries":["12333","12343"],"_currentTry":"12343"}],"actualPlayer":{"_nickname":"giocatore1","_points":1,"_tries":["12333","12343"],"_currentTry":"12343"}}

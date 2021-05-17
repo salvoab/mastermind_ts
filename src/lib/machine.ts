@@ -23,9 +23,9 @@ export class MastermindMachine{
             context: {
                 // TO-DO generare il codice in maniera randomica
                 secretCode: 'EEEEE', 
-                userCode: 'eeeee',
+                //userCode: 'eeeee',
                 players: [],
-                actualPlayer: new User()
+                actualPlayer: new User('guest')
             },
             states: {
                 loader: {
@@ -55,14 +55,22 @@ export class MastermindMachine{
                         id: 'getUserCode',
                         src: (context, event) => this._inputService.recuperaCodiceValido(),
                         onDone: {
-                            target: 'calculator',
-                            actions: assign({ userCode: (context, event) => event.data })
+                            target: 'update',
+                            // chiamare getUser e dell'utente restituito fare l'update dei try tramite metodi appositi
+                            //actions: assign({ userCode: (context, event) => event.data })
+                            actions: 'updateTries'
                         }
                     },
                     on:{
                         //OK: {target: 'calculator'},
                         KO: {target: 'starter'},
                         ERROR: {target: 'error'}
+                    }
+                },
+                update :{
+                    entry: 'updating',
+                    on:{
+                        OK: {target: 'calculator'}
                     }
                 },
                 calculator: {
@@ -123,8 +131,18 @@ export class MastermindMachine{
                     return ( {type: 'OK'} );
                 }),
 
+                updateTries: (context, event) => {
+                    context['actualPlayer'].currentTry = event['data'];
+                    this._usersService.updateUser(context);
+                },
+
+                updating: send((context, event) => {
+                    console.log('Updating...');
+                    return {type : 'OK'};
+                }),
+
                 calcola: send((context, event) => {
-                    const result = this._mastermindService.checkWin(context['userCode']);
+                    const result = this._mastermindService.checkWin(context['actualPlayer'].currentTry);
                     console.log(result);
                     if( result === "WIN"){
                         return { type: 'WIN' };
