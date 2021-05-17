@@ -66,12 +66,14 @@ export class MastermindMachine{
                         ERROR: {target: 'error'}
                     }
                 },
+
                 update :{
                     entry: 'updating',
                     on:{
                         OK: {target: 'calculator'}
                     }
                 },
+
                 calculator: {
                     entry: ['calcola'],
                     on:{
@@ -127,6 +129,7 @@ export class MastermindMachine{
                 getSecretCode: send((context, event) =>{
                     context['secretCode'] = this._mastermindService.secretCode;
                     console.log('Il codice Segreto recuperato è: ' + context['secretCode']);
+
                     return ( {type: 'OK'} );
                 }),
 
