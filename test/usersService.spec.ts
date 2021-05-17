@@ -62,18 +62,18 @@ describe('UsersServiceTest', () => {
         machineContext.players = [new User('giocatore1'), giocatore2];
 
         const result = service.deleteUser(machineContext, 'giocatore3');
-        assert.deepEqual(result, null);
+        assert.equal(result, null);
         assert.equal(machineContext.players.length, 2);
     });
     it('loadMachine first test', async () => {
-        const result = service.loadMachine(machineContext, './test/testMachineContext.json');
+        const result = service.loadMachine(machineContext, './test/data/testMachineContext.json');
         assert.deepEqual(result, true);
         assert.equal(machineContext.players.length, 1);
         assert.equal(machineContext.players[0].points, 2);
         assert.equal(machineContext.actualPlayer.nickname, 'guest');
     });
     it('loadMachine second test', async () => {
-        const result = service.loadMachine(machineContext, './test/noMachineContext.json');
+        const result = service.loadMachine(machineContext, './test/data/noMachineContext.json');
         assert.deepEqual(result, false);
         assert.equal(machineContext.players.length, 0);
         assert.equal(machineContext.actualPlayer.nickname, 'guest');

@@ -1,7 +1,6 @@
 export class User {
     private _nickname: string;
     private _points: number;
-    //TO-DO gestire questi nuovi campi
     private _tries: Array<string>;
     private _currentTry:string;
 

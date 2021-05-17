@@ -22,8 +22,7 @@ export class MastermindMachine{
             initial: "loader",
             context: {
                 // TO-DO generare il codice in maniera randomica
-                secretCode: 'EEEEE', 
-                //userCode: 'eeeee',
+                secretCode: 'EEEEE',
                 players: [],
                 actualPlayer: new User('guest')
             },
