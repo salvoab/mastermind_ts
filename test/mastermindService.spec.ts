@@ -1,12 +1,12 @@
 import 'mocha';
 import {assert} from "chai";
-import {mastermindService} from "../src/common/mastermindService";
+import {MastermindService} from "../src/common/mastermindService";
 
-describe('Tests', () => {
+describe('MastermindServiceTest', () => {
 
     let service;
     beforeEach(() => {
-       service = new mastermindService("12343");
+       service = new MastermindService("12343");
     });
     afterEach(() => {
     });

@@ -1,10 +1,14 @@
 export class User {
     private _nickname: string;
     private _points: number;
+    private _tries: Array<string>;
+    private _currentTry:string;
 
-    constructor(nickname:string = ''){
+    constructor(nickname:string = '', points:number = 0){
         this._nickname = nickname;
-        this._points = 0;
+        this._points = points;
+        this._tries = [];
+        this._currentTry = 'eeeee';
     }
 
     // di base aumenta di 1, se il sistema di punteggio cambia i punti possono essere > 1
@@ -12,20 +16,39 @@ export class User {
         this._points += points;
     }
 
-    public set points(points:number){
+    set points(points:number){
         this._points = points;
     }
 
-    public get points(){
+    get points(){
         return this._points;
     }
 
-    public set nickname(name:string){
+    set nickname(name:string){
         this._nickname = name;
     }
 
-    public get nickname(){
+    get nickname(){
         return this._nickname;
+    }
+
+    set currentTry(userTry:string){
+        this._currentTry = userTry;
+        this._tries.push(userTry);
+    }
+
+    get currentTry(){
+        return this._currentTry;
+    }
+
+    set tries(userTries:Array<string>){
+        if(userTries){
+            this._tries = userTries;
+        }
+    }
+
+    get tries(){
+        return this._tries;
     }
 
 }
