@@ -1,9 +1,8 @@
-
 export interface MastermindContext{
     try: number
 }
 
-export type MastermindEvent = 
+export type MastermindEvent =
     | { type: 'OK' }
     | { type: 'KO' }
     | { type: 'WIN' }

@@ -1,7 +1,7 @@
 import 'mocha';
 import { assert } from "chai";
 import { UsersService } from '../src/common/userService';
-import { User } from '../src/common/user';
+import User from '../src/common/user';
 
 describe('UsersServiceTest', () => {
 
@@ -15,8 +15,8 @@ describe('UsersServiceTest', () => {
             actualPlayer: new User('guest')
        }
     });
-    afterEach(() => {
-    });
+    // afterEach(() => {
+    // });
     it('getUser first test', async () => {
         const result = service.getUser(machineContext, "giocatore1");
         assert.instanceOf(result, User);

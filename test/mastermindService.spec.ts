@@ -1,6 +1,6 @@
 import 'mocha';
 import {assert} from "chai";
-import {MastermindService} from "../src/common/mastermindService";
+import MastermindService from "../src/common/mastermindService";
 
 describe('MastermindServiceTest', () => {
 
@@ -8,8 +8,8 @@ describe('MastermindServiceTest', () => {
     beforeEach(() => {
        service = new MastermindService("12343");
     });
-    afterEach(() => {
-    });
+    // afterEach(() => {
+    // });
     it('first test', async () => {
         const result = service.checkWin("11133");
         assert.equal(result, "posizione(2) giusto(3)");
