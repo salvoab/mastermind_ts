@@ -43,7 +43,9 @@ export class UsersService{
             const oldContext = JSON.parse( fs.readFileSync(machineContextPath) );
             //console.log(oldContext.players);
             oldContext.players.forEach(player => {
-                machineContext['players'].push(new User(player._nickname, player._points));
+                const newUser = new User(player._nickname, player._points);
+                newUser.tries = player._tries;
+                machineContext['players'].push(newUser);
             });
             //console.log('loaded: ', machineContext['players']);
             return true;
