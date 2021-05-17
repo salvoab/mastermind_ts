@@ -1,6 +1,6 @@
 import readline  from 'readline'
 
-export class inputService {
+export class InputService {
     private rl;
     private INVALID_CODE = "Non valido";
     private SECRET_CODE_LENGTH = 5;
@@ -18,14 +18,17 @@ export class inputService {
         this.rl.close();
     }
 
+    async recuperaNickname():Promise<string>{
+        return new Promise((resolve, reject) => {
+            this.rl.question("Inserisci il nickname del giocatore: " , (answer:string) => resolve(answer) );
+        })
+    }
+
     async chiediDiContinuare():Promise<boolean> {
         return new Promise((resolve, reject) => {  
 
             this.rl.question("Vuoi continuare? [S/N]: ", (answer:string) => {               
-                if("S" === answer.toUpperCase())
-                    resolve(true);
-                else
-                    resolve(false);
+                resolve ("S" === answer.toUpperCase());
             })
             
         })

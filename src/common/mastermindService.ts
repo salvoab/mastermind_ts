@@ -1,4 +1,4 @@
-export class mastermindService {
+export class MastermindService {
 
     secretCode:string;
 
