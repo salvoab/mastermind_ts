@@ -23,7 +23,6 @@ export default class MastermindMachine {
         id: 'mastermind',
         initial: 'loader',
         context: {
-          // TO-DO generare il codice in maniera randomica
           secretCode: 'EEEEE',
           players: [],
           actualPlayer: new User('guest'),
@@ -37,7 +36,6 @@ export default class MastermindMachine {
             },
           },
           starter: {
-            // entry: 'getSecretCode',
             invoke: {
               id: 'getNickname',
               src: (context, event) => this._inputService.recuperaNickname(),
@@ -51,37 +49,22 @@ export default class MastermindMachine {
             },
           },
           askUserCode: {
-            // entry: ['recuperaCodice'],
             invoke: {
               id: 'getUserCode',
-              src: (context, event) => this._inputService.recuperaCodice(false),
+              src: (context, event) => {
+                const isInvalidCode = event['data'] === 'Non valido';
+                return this._inputService.recuperaCodice(isInvalidCode);
+              },
               onDone: {
                 target: 'update',
-                // actions: assign({ userCode: (context, event) => event.data })
                 actions: 'updateTries',
               },
               onError: {
-                target: 'askUserCodeAgain'
+                target: 'askUserCode'
               }
             },
             on: {
-              // OK: {target: 'calculator'},
-              KO: { target: 'starter' },
               ERROR: { target: 'error' },
-            },
-          },
-
-          askUserCodeAgain: {
-            invoke: {
-              id: 'getUserCode',
-              src: (context, event) => this._inputService.recuperaCodice(true),
-              onDone: {
-                target: 'update',
-                actions: 'updateTries',
-              },
-              onError: {
-                target: 'askUserCodeAgain'
-              }
             }
           },
 
@@ -125,8 +108,7 @@ export default class MastermindMachine {
           },
           error: {
             type: 'final',
-          },
-
+          }
         },
       },
       {

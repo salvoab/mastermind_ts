@@ -72,9 +72,7 @@ export default class InputService {
      */
     public async recuperaCodice(repeated:boolean):Promise<string> {
       return new Promise((resolve, reject) => {
-        let domanda:string;
-
-        if (repeated) { domanda = `Reinserisci il codice segreto: di ${this.SECRET_CODE_LENGTH} caratteri: `; } else { domanda = `Inserisci il codice segreto di ${this.SECRET_CODE_LENGTH} caratteri: `; }
+        const domanda = repeated ? `Reinserisci il codice segreto di ${this.SECRET_CODE_LENGTH} caratteri: ` : `Inserisci il codice segreto di ${this.SECRET_CODE_LENGTH} caratteri: `;
 
         this.rl.question(domanda, (code:string) => {
           if (this.SECRET_CODE_LENGTH !== code.length) {
