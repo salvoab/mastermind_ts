@@ -5,10 +5,10 @@ export default class MastermindService {
       this.generateCode();
     }
 
-    get secretCode():string{
-      return this._secretCode;
-    }
-
+    /**
+     * Genera il codice segreto
+     * @returns il nuovo codice generato
+     */
     generateCode():string{
       let randomCode = '';
       for (let i = 0; i < 5; i += 1) {
@@ -18,6 +18,11 @@ export default class MastermindService {
       return randomCode;
     }
 
+    /**
+     * Confronta il codice da testare con il codice segreto e restituisce un object literal che definisce il numero di posizioni e il numero di caratteri indovinati
+     * @param userCode codice da testare
+     * @returns object literal con proprietà position per il numero di posizioni corrette e la proprietà matched per il numero di caratteri corretti
+     */
     checkCode(userCode:string):{position:number, matched:number} {
       const rowSecretCode = this._secretCode.split('');
       const rowUserCode = userCode.split('');
@@ -44,9 +49,18 @@ export default class MastermindService {
       return { position, matched };
     }
 
+    /**
+     * Confronta il codice da testare con il codice segreto e restituisce una stringa che descrive il numero di posizioni e il numero di caratteri indovinati
+     * @param userCode codice da testare
+     * @returns stringa del formato posizione(x) giusto(y) con x numero di posizioni esatte e y con il numero di caratteri indovinati
+     */
     checkWin(userCode:string):string {
       const { position, matched } = this.checkCode(userCode);
       if (matched === 5 && position === 5) { return 'WIN'; }
       return `posizione(${position}) giusto(${matched})`;
+    }
+
+    get secretCode():string{
+      return this._secretCode;
     }
 }
