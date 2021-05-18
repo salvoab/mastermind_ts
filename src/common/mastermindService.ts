@@ -66,4 +66,8 @@ export default class MastermindService {
     get secretCode():string{
       return this._secretCode;
     }
+
+    set secretCode(secretCode:string){
+      this._secretCode = secretCode;
+    }
 }

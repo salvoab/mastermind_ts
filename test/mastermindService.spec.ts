@@ -5,7 +5,8 @@ import MastermindService from '../src/common/mastermindService';
 describe('MastermindServiceTest', () => {
   let service;
   beforeEach(() => {
-    service = new MastermindService('12343');
+    service = new MastermindService();
+    service.secretCode = '12343';
   });
   // afterEach(() => {
   // });
