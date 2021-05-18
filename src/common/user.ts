@@ -14,7 +14,10 @@ export default class User {
       this._currentTry = 'eeeee';
     }
 
-    // di base aumenta di 1, se il sistema di punteggio cambia i punti possono essere > 1
+    /**
+     * Agginge il numero di punti specificato al punteggio
+     * @param points numero di punti da aggiungere al punteggio, se non specificato vale 1
+     */
     public addPoints(points = 1):void {
       this._points += points;
     }
@@ -35,6 +38,10 @@ export default class User {
       return this._nickname;
     }
 
+    /**
+     * Assegnazione del tentativo corrente. Il tentativo viene aggiunto allo storico dei tentativi
+     * @param userTry codice che l'utente vuole confrontare con il codice segreto
+     */
     set currentTry(userTry:string) {
       this._currentTry = userTry;
       this._tries.push(userTry);
