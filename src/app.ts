@@ -44,7 +44,7 @@ const CODICE_SEGRETO = '12343';
 }
 */
 async function main() {
-  const myMachine = new MastermindMachine(new InputService(), new MastermindService(CODICE_SEGRETO), new UsersService());
+  const myMachine = new MastermindMachine(new InputService(), new MastermindService(), new UsersService());
   myMachine.interpret.start();
   /* myMachine.interpret.send({type: 'OK'});
   myMachine.interpret.send({type: 'OK'});

@@ -174,6 +174,9 @@ export default class MastermindMachine {
               context.actualPlayer.addPoints();
               this._usersService.updateUser(context);
               console.log(`Il tuo punteggio è: ${context.actualPlayer.points} punti`);
+              // Generazione del nuovo codice Segreto
+              context.secretCode = this._mastermindService.generateCode();
+              console.log('Il nuovo codice segreto: ' + context.secretCode);
             } else {
               console.log(`Mi dispiace ${context.actualPlayer.nickname}: Hai perso`);
             }

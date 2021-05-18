@@ -1,15 +1,28 @@
 export default class MastermindService {
-    secretCode:string;
+    _secretCode:string;
 
-    constructor(secretCode:string) {
-      this.secretCode = secretCode;
+    constructor() {
+      this.generateCode();
+    }
+
+    get secretCode():string{
+      return this._secretCode;
+    }
+
+    generateCode():string{
+      let randomCode = '';
+      for (let i = 0; i < 5; i += 1) {
+        randomCode += Math.floor(Math.random() * 10).toString();
+      }
+      this._secretCode = randomCode;
+      return randomCode;
     }
 
     checkCode(userCode:string):{position:number, matched:number} {
-      const rowSecretCode = this.secretCode.split('');
+      const rowSecretCode = this._secretCode.split('');
       const rowUserCode = userCode.split('');
 
-      for (let i = 0; i < this.secretCode.length; i += 1) {
+      for (let i = 0; i < this._secretCode.length; i += 1) {
         if (rowSecretCode[i] === rowUserCode[i]) {
           rowSecretCode[i] = 'T';
           rowUserCode[i] = 'T';
@@ -25,7 +38,7 @@ export default class MastermindService {
         }
       }
 
-      const position = this.secretCode.length - remainingSecret.length;
+      const position = this._secretCode.length - remainingSecret.length;
       const matched = position + remainingSecret.filter((element) => element === 'M').length;
 
       return { position, matched };
