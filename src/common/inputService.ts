@@ -1,5 +1,8 @@
 import readline from 'readline';
 
+/**
+ * Classe per la gestione degli input da terminale
+ */
 export default class InputService {
     private rl;
 

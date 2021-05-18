@@ -1,3 +1,6 @@
+/**
+ * Classe contenente la logica di gioco del mastermind
+ */
 export default class MastermindService {
     _secretCode:string;
 

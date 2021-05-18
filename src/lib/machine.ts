@@ -6,6 +6,9 @@ import MastermindService from '../common/mastermindService';
 import User from '../common/user';
 import { UsersService } from '../common/userService';
 
+/**
+ * Classe per la definizione e l'utilizzo della macchina a stati finiti che descrive il flusso del gioco mastermind
+ */
 export default class MastermindMachine {
     private _machine:any;
 
@@ -190,8 +193,6 @@ export default class MastermindMachine {
           }),
 
           stopGame: (context, event) => {
-            // fs.promises.mkdir('./src/data', { recursive: true }).catch(console.error);
-            // fs.writeFileSync('./src/data/machineContext.json', JSON.stringify(context));
             this._usersService.saveMachine(context, './src/data/machineContext.json');
             this._inputService.chiudiReadline();
           },

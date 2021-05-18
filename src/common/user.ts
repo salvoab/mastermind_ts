@@ -1,3 +1,6 @@
+/**
+ * Classe che definisce un utente del gioco mastermind
+ */
 export default class User {
     private _nickname: string;
 
