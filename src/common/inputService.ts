@@ -17,7 +17,7 @@ export default class InputService {
     // REGOLA GENERALE:
     // Prima tutti i metodi pubblici poi i privati e in fondo i metodi getter e setter
 
-    chiudiReadline() {
+    chiudiReadline():void {
       this.rl.close();
     }
 
@@ -34,7 +34,7 @@ export default class InputService {
         });
       });
     }
-
+/*
     async recuperaCodiceValido():Promise<string> {
       try {
         let result = await this.recuperaCodice(false);
@@ -48,17 +48,17 @@ export default class InputService {
         console.log(error);
         return this.INVALID_CODE;
       }
-    }
+    }*/
 
-    private async recuperaCodice(repeated:boolean):Promise<string> {
-      return new Promise((resolve) => {
+    public async recuperaCodice(repeated:boolean):Promise<string> {
+      return new Promise((resolve, reject) => {
         let domanda:string;
 
-        if (repeated) { domanda = 'Reinserisci il codice segreto: '; } else { domanda = `Inserisci il codice segreto di ${this.SECRET_CODE_LENGTH} caratteri: `; }
+        if (repeated) { domanda = `Reinserisci il codice segreto: di ${this.SECRET_CODE_LENGTH} caratteri: `; } else { domanda = `Inserisci il codice segreto di ${this.SECRET_CODE_LENGTH} caratteri: `; }
 
         this.rl.question(domanda, (code:string) => {
           if (this.SECRET_CODE_LENGTH !== code.length) {
-            resolve(this.INVALID_CODE);
+            reject(this.INVALID_CODE);
           } else {
             resolve(code);
           }

@@ -19,7 +19,7 @@ export class UsersService {
     return newPlayer;
   }
 
-  public updateUser(machineContext) {
+  public updateUser(machineContext):void {
     const actualPlayerPosition = machineContext.players.findIndex((player) => player === machineContext.actualPlayer);
     machineContext.players[actualPlayerPosition] = machineContext.actualPlayer;
   }
@@ -51,7 +51,7 @@ export class UsersService {
     return false;
   }
 
-  public saveMachine(machineContext, machineContextPath:string) {
+  public saveMachine(machineContext, machineContextPath:string):void {
     const directoryPath = path.dirname(machineContextPath);
     fs.promises.mkdir(directoryPath, { recursive: true }).catch(console.error);
     fs.writeFileSync(machineContextPath, JSON.stringify(machineContext));

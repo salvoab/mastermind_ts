@@ -15,7 +15,7 @@ export default class User {
     }
 
     // di base aumenta di 1, se il sistema di punteggio cambia i punti possono essere > 1
-    public addPoints(points = 1) {
+    public addPoints(points = 1):void {
       this._points += points;
     }
 
@@ -23,7 +23,7 @@ export default class User {
       this._points = points;
     }
 
-    get points() {
+    get points():number {
       return this._points;
     }
 
@@ -31,7 +31,7 @@ export default class User {
       this._nickname = name;
     }
 
-    get nickname() {
+    get nickname():string {
       return this._nickname;
     }
 
@@ -40,7 +40,7 @@ export default class User {
       this._tries.push(userTry);
     }
 
-    get currentTry() {
+    get currentTry():string {
       return this._currentTry;
     }
 
@@ -50,7 +50,7 @@ export default class User {
       }
     }
 
-    get tries() {
+    get tries():Array<string> {
       return this._tries;
     }
 }

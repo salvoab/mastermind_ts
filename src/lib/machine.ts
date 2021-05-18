@@ -43,27 +43,43 @@ export default class MastermindMachine {
               },
             },
             on: {
-              OK: { target: 'validCode' },
+              OK: { target: 'askUserCode' },
               ERROR: { target: 'error' },
             },
           },
-          validCode: {
+          askUserCode: {
             // entry: ['recuperaCodice'],
             invoke: {
               id: 'getUserCode',
-              src: (context, event) => this._inputService.recuperaCodiceValido(),
+              src: (context, event) => this._inputService.recuperaCodice(false),
               onDone: {
                 target: 'update',
-                // chiamare getUser e dell'utente restituito fare l'update dei try tramite metodi appositi
                 // actions: assign({ userCode: (context, event) => event.data })
                 actions: 'updateTries',
               },
+              onError: {
+                target: 'askUserCodeAgain'
+              }
             },
             on: {
               // OK: {target: 'calculator'},
               KO: { target: 'starter' },
               ERROR: { target: 'error' },
             },
+          },
+
+          askUserCodeAgain: {
+            invoke: {
+              id: 'getUserCode',
+              src: (context, event) => this._inputService.recuperaCodice(true),
+              onDone: {
+                target: 'update',
+                actions: 'updateTries',
+              },
+              onError: {
+                target: 'askUserCodeAgain'
+              }
+            }
           },
 
           update: {
@@ -96,7 +112,7 @@ export default class MastermindMachine {
               },
             },
             on: {
-              CONTINUE: { target: 'validCode' },
+              CONTINUE: { target: 'askUserCode' },
               STOP: { target: 'end' },
             },
           },
