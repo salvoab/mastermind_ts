@@ -66,9 +66,10 @@ describe('UsersServiceTest', () => {
   });
   it('loadMachine first test', async () => {
     const result = service.loadMachine(machineContext, './test/data/testMachineContext.json');
-    assert.deepEqual(result, true);
+    assert.equal(result, true);
     assert.equal(machineContext.players.length, 1);
     assert.equal(machineContext.players[0].points, 2);
+    assert.deepEqual(machineContext.players[0].tries, ["32145","12333","12343"]);
     assert.equal(machineContext.actualPlayer.nickname, 'guest');
   });
   it('loadMachine second test', async () => {

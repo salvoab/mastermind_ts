@@ -13,7 +13,7 @@ import { UsersService } from './common/userService';
 
 // si lascia uno spazio e si dichiarano le costanti
 
-const CODICE_SEGRETO = '12343';
+// const CODICE_SEGRETO = '12343';
 
 /* async function main(){
     const gameService = new mastermindService(CODICE_SEGRETO);

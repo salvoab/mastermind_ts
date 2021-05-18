@@ -7,7 +7,8 @@
     "test": "_mocha --timeout 5000 -r ts-node/register ./*/*.spec.ts",
     "eslint": "npx eslint src/*/** --fix",
     "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix"
+    "lint-and-fix": "eslint . --ext .ts --fix",
+    "cover": " rimraf .nyc_output  && rimraf docs && nyc npm test"
   },
   "private": true,
   "dependencies": {
@@ -48,7 +49,8 @@
       "src/**/!(*.test.*).[tj]s?(x)"
     ],
     "exclude": [
-      "src/**/*.d.ts"
+      "src/**/*.d.ts",
+      "src/app.ts"
     ],
     "reporter": [
       "html",
