@@ -64,15 +64,18 @@ describe('UsersServiceTest', () => {
     assert.equal(result, null);
     assert.equal(machineContext.players.length, 2);
   });
-  it('loadMachine first test', async () => {
-    const result = service.loadMachine(machineContext, './test/data/testMachineContext.json');
+  it('loadMachine and saveMachine test', async () => {
+    const testMachineContextPath = './test/data/testMachineContext.json';
+    const result = service.loadMachine(machineContext, testMachineContextPath);
+    service.saveMachine(machineContext, testMachineContextPath);
+    
     assert.equal(result, true);
     assert.equal(machineContext.players.length, 1);
     assert.equal(machineContext.players[0].points, 2);
     assert.deepEqual(machineContext.players[0].tries, ["32145","12333","12343"]);
     assert.equal(machineContext.actualPlayer.nickname, 'guest');
   });
-  it('loadMachine second test', async () => {
+  it('loadMachine wrong path test', async () => {
     const result = service.loadMachine(machineContext, './test/data/noMachineContext.json');
     assert.deepEqual(result, false);
     assert.equal(machineContext.players.length, 0);
