@@ -2,19 +2,8 @@
  * Classe che definisce un utente del gioco mastermind
  */
 export default class User {
-    private _nickname: string;
 
-    private _points: number;
-
-    private _tries: Array<string>;
-
-    private _currentTry:string;
-
-    constructor(nickname = '', points = 0) {
-      this._nickname = nickname;
-      this._points = points;
-      this._tries = [];
-      this._currentTry = 'eeeee';
+    constructor(private _nickname = '', private _points = 0, private _tries = new Array<string>(), private _currentTry = 'eeeee') {
     }
 
     /**
