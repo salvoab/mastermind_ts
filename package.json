@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "tslog": "^3.2.0",
     "xstate": "^4.19.1"
   },
   "devDependencies": {

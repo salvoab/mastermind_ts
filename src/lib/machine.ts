@@ -5,6 +5,7 @@ import InputService from '../common/inputService';
 import MastermindService from '../common/mastermindService';
 import User from '../common/user';
 import { UsersService } from '../common/userService';
+import { Logger } from 'tslog'
 
 /**
  * Classe per la definizione e l'utilizzo della macchina a stati finiti che descrive il flusso del gioco mastermind
@@ -14,10 +15,13 @@ export default class MastermindMachine {
 
     private _interpret:any;
 
+    private log: Logger;
+
     constructor(private _inputService:InputService, private _mastermindService:MastermindService, private _usersService:UsersService) {
       this._inputService = _inputService;
       this._mastermindService = _mastermindService;
       this._usersService = _usersService;
+      this.log = new Logger();
 
       this._machine = createMachine({
         id: 'mastermind',
@@ -128,7 +132,7 @@ export default class MastermindMachine {
 
           getSecretCode: send((context, event) => {
             context.secretCode = this._mastermindService.secretCode;
-            console.log(`Il codice Segreto recuperato è: ${context.secretCode}`);
+            this.log.silly(`Il codice Segreto recuperato è: ${context.secretCode}`);
 
             return ({ type: 'OK' });
           }),
@@ -139,13 +143,13 @@ export default class MastermindMachine {
           },
 
           updating: send((context, event) => {
-            console.log('Updating...');
+            this.log.silly('Updating...');
             return { type: 'OK' };
           }),
 
           calcola: send((context, event) => {
             const result = this._mastermindService.checkWin(context.actualPlayer.currentTry);
-            console.log(result);
+            this.log.silly(result);
             if (result === 'WIN') {
               return { type: 'WIN' };
             }
@@ -155,15 +159,15 @@ export default class MastermindMachine {
 
           risultatoPartita: send((context, event) => {
             if (event.type === 'WIN') {
-              console.log(`${context.actualPlayer.nickname} HAI VINTO`);
+              this.log.silly(`${context.actualPlayer.nickname} HAI VINTO`);
               context.actualPlayer.addPoints();
               this._usersService.updateUser(context);
-              console.log(`Il tuo punteggio è: ${context.actualPlayer.points} punti`);
+              this.log.silly(`Il tuo punteggio è: ${context.actualPlayer.points} punti`);
               // Generazione del nuovo codice Segreto
               context.secretCode = this._mastermindService.generateCode();
-              console.log('Il nuovo codice segreto: ' + context.secretCode);
+              this.log.silly('Il nuovo codice segreto: ' + context.secretCode);
             } else {
-              console.log(`Mi dispiace ${context.actualPlayer.nickname}: Hai perso`);
+              this.log.silly(`Mi dispiace ${context.actualPlayer.nickname}: Hai perso`);
             }
 
             return { type: 'OK' };
@@ -181,7 +185,7 @@ export default class MastermindMachine {
         },
       });
 
-      this._interpret = interpret(this._machine);// .onTransition((state)=> console.log(state.value));
+      this._interpret = interpret(this._machine);// .onTransition((state)=> this.log.silly(state.value));
     }
 
     get machine() {

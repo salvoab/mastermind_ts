@@ -48,21 +48,6 @@ export default class InputService {
         });
       });
     }
-    /*
-    async recuperaCodiceValido():Promise<string> {
-      try {
-        let result = await this.recuperaCodice(false);
-
-        while (this.INVALID_CODE === result) {
-          console.log(`Il codice che hai inserito non è lungo ${this.SECRET_CODE_LENGTH} caratteri`);
-          result = await this.recuperaCodice(true);
-        }
-        return result;
-      } catch (error) {
-        console.log(error);
-        return this.INVALID_CODE;
-      }
-    }*/
 
     /**
      * Chiede all'untente, tramite terminale, di inserire un codice formato da 5 caratteri.

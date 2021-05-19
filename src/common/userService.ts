@@ -1,4 +1,5 @@
 import User from './user';
+import { Logger } from 'tslog';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require('fs');
@@ -9,6 +10,12 @@ const path = require('path');
  * Classe per la gestione degli utenti
  */
 export class UsersService {
+
+  private log:Logger;
+
+  constructor(){
+    this.log = new Logger();
+  }
 
   /**
    * Dato un riferimento al contesto della macchina e il nickname di un giocatore, verifica che nella lista giocatori del contesto della macchina,
@@ -92,7 +99,7 @@ export class UsersService {
    */
   public saveMachine(machineContext, machineContextPath:string):void {
     const directoryPath = path.dirname(machineContextPath);
-    fs.promises.mkdir(directoryPath, { recursive: true }).catch(console.error);
+    fs.promises.mkdir(directoryPath, { recursive: true }).catch(error => this.log.error(error));
     fs.writeFileSync(machineContextPath, JSON.stringify(machineContext));
   }
 }
