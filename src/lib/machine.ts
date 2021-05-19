@@ -158,6 +158,7 @@ export default class MastermindMachine {
           }),
 
           risultatoPartita: send((context, event) => {
+            this.log.debug('sono in risultato partita');
             if (event.type === 'WIN') {
               this.log.silly(`${context.actualPlayer.nickname} HAI VINTO`);
               context.actualPlayer.addPoints();
